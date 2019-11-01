@@ -32,18 +32,18 @@ $("#submitInfo").on("click", function (event) {
     var tName = $("#iTrainName").val().trim();
     var tDestination = $("#iTrainDestination").val().trim();
     var tFrequency = $("#iTrainFrequency").val().trim();
-    var tArrival = $("#iTrainArrival").val().trim();
+    var tFirstArrival = $("#iFirstTrainArrival").val().trim();
 
     console.log(tName);
     console.log(tDestination);
     console.log(tFrequency);
-    console.log(tArrival);
+    console.log(tFirstArrival);
 
     database.ref().push({
         trainName: tName,
         trainDestination: tDestination,
         trainFrequency: tFrequency,
-        trainArrival: tArrival,
+        firstTrainArrival: tFirstArrival,
     });
 });
 
@@ -56,8 +56,9 @@ database.ref().on("child_added", function (snapshot) {
     console.log(sv.trainName);
     console.log(sv.trainDestination);
     console.log(sv.trainFrequency);
-    console.log(sv.trainArrival);
-    console.log(moment(sv.trainArrival,"HH:mm").to());
+    console.log(sv.firstTrainArrival);
+
+    var fiTrArrival = sv.firstTrainArrival
 
     function addTrainToTable() {
         var table = document.getElementById("trainScheduleTable");
@@ -70,13 +71,42 @@ database.ref().on("child_added", function (snapshot) {
         cell0.innerHTML = sv.trainName;
         cell1.innerHTML = sv.trainDestination;
         cell2.innerHTML = sv.trainFrequency;
-        cell3.innerHTML = sv.trainArrival;
-        var HHmmFormat = "HH:mm";
-        var formattedTArrival = moment(sv.trainArrival, HHmmFormat);
-        console.log(formattedTArrival.diff(moment(), "minutes"));
-        cell4.innerHTML = formattedTArrival.diff(moment(), "minutes");
+ //       cell3.innerHTML = 
+
+        console.log(moment().diff(fiTrArrival, "minutes"));
+    //    cell4.innerHTML = formattedFTArrival.diff(moment(), "minutes");
     }
     addTrainToTable();
+
+    var tFreq = sv.trainFrequency;
+    var fTrArr = sv.firstTrainArrival;
+    console.log(tFreq);
+    console.log(fTrArr);
+
+    // // First Time (pushed back 1 year to make sure it comes before current time)
+    // var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    // console.log(firstTimeConverted);
+
+    // Current Time
+    var currentTime = moment().format("HH:mm");
+    console.log(moment(currentTime));
+
+    // Difference between the times
+    var diffTime = moment().diff(moment(fTrArr), "minutes");
+    console.log(diffTime);
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % tFrequency;
+    console.log(tRemainder);
+
+    // Minute Until Train
+    var tMinutesTillTrain = tFrequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+
 });
 
 
