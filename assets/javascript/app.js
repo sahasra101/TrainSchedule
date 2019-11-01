@@ -57,7 +57,7 @@ database.ref().on("child_added", function (snapshot) {
     console.log(sv.trainDestination);
     console.log(sv.trainFrequency);
     console.log(sv.trainArrival);
-    console.log(moment(sv.trainArrival,"minutes").to());
+    console.log(moment(sv.trainArrival,"HH:mm").to());
 
     function addTrainToTable() {
         var table = document.getElementById("trainScheduleTable");
@@ -71,7 +71,10 @@ database.ref().on("child_added", function (snapshot) {
         cell1.innerHTML = sv.trainDestination;
         cell2.innerHTML = sv.trainFrequency;
         cell3.innerHTML = sv.trainArrival;
-        cell4.innerHTML = moment(sv.trainArrival,"HH:mm",).to();
+        var HHmmFormat = "HH:mm";
+        var formattedTArrival = moment(sv.trainArrival, HHmmFormat);
+        console.log(formattedTArrival.diff(moment(), "minutes"));
+        cell4.innerHTML = formattedTArrival.diff(moment(), "minutes");
     }
     addTrainToTable();
 });
