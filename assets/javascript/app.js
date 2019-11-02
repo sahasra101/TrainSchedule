@@ -45,6 +45,12 @@ $("#submitInfo").on("click", function (event) {
         trainFrequency: tFrequency,
         firstTrainArrival: tFirstArrival,
     });
+
+    $("#iTrainName").val("");
+    $("#iTrainDestination").val("");
+    $("#iTrainFrequency").val("");
+    $("#iFirstTrainArrival").val("");
+
 });
 
 // Firebase watcher .on("child_added"
